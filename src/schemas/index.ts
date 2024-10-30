@@ -1,25 +1,33 @@
 import { z } from "zod";
 
 export const LoginSchema = z.object({
-  email: z.string().email({
-    message: "Email is required",
-  }),
-  password: z.string().min(1, {
-    message: "Password is required",
-  }),
+  email: z
+    .string()
+    .trim()
+    .min(1, { message: "Email required!" })
+    .email({ message: "Email is required" }),
+  password: z.string().trim().min(1, { message: "Password is required" }),
 });
 
 export const RegisterSchema = z.object({
-  email: z.string().email({
-    message: "Email is required",
-  }),
-  password: z.string().min(6, {
-    message: "Minimum 6 characters is required",
-  }),
-  firstname: z.string().min(1, {
+  email: z
+    .string()
+    .trim()
+    .min(1, { message: "Email required!" })
+    .email({ message: "Email is required" }),
+  password: z
+    .string()
+    .trim()
+    .min(1, { message: "Password is required" })
+    .min(6, { message: "Password must have at least 6 characters!" }),
+  confirmPassword: z
+    .string()
+    .trim()
+    .min(1, { message: "Password is required" }),
+  firstname: z.string().trim().min(1, {
     message: "Name is required",
   }),
-  lastname: z.string().min(1, {
+  lastname: z.string().trim().min(1, {
     message: "Name is required",
   }),
 });

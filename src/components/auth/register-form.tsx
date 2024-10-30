@@ -10,15 +10,15 @@ import {
   FormControl,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
+} from "../ui/form";
 
-import { CardWrapper } from "@/components/auth/card-wrapper";
-import { Input } from "@/components/ui/input";
-import { RegisterSchema } from "@/schemas";
-import { FormError } from "@/components/form-error";
-import { FormSuccess } from "@/components/form-success";
-import { Button } from "@/components/ui/button";
-import { register } from "@/actions/register";
+import { CardWrapper } from "./card-wrapper";
+import { Input } from "../ui/input";
+import { RegisterSchema } from "../../schemas";
+import { FormError } from "../form-error";
+import { FormSuccess } from "../form-success";
+import { Button } from "../ui/button";
+import { register } from "../../actions/register";
 
 export function RegisterForm() {
   const [error, setError] = useState<string | undefined>("");
@@ -29,6 +29,7 @@ export function RegisterForm() {
     defaultValues: {
       email: "",
       password: "",
+      confirmPassword: "",
       firstname: "",
       lastname: "",
     },
@@ -115,6 +116,24 @@ export function RegisterForm() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={isPending}
+                      placeholder="******"
+                      {...field}
+                      type="password"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="confirmPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Confirm Password</FormLabel>
                   <FormControl>
                     <Input
                       disabled={isPending}

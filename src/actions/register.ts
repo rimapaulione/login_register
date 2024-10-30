@@ -1,16 +1,34 @@
 "use server";
 
-import { RegisterSchema } from "@/schemas";
+import { RegisterSchema } from "../schemas";
 import { z } from "zod";
 
 export async function register(values: z.infer<typeof RegisterSchema>) {
-  // await new Promise((resolve) => setTimeout(() => resolve("delay"), 2000));
-
   const validatedFields = RegisterSchema.safeParse(values);
 
   if (!validatedFields.success) {
     return { error: "Invalid fields" };
   }
+  if (validatedFields.data.password !== validatedFields.data.confirmPassword)
+    return { error: "Please check passwords" };
 
-  return { success: "Your login is success" };
+  try {
+    const response = await fetch(`http://localhost:8080/api/auth/register`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(validatedFields.data),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error);
+    }
+
+    const result = await response.json();
+    return { success: "Registration successful", data: result };
+  } catch (error: any) {
+    return { error: error.message };
+  }
 }
