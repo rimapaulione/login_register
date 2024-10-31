@@ -1,6 +1,27 @@
 "use server";
 
-import { signOut } from "@/auth";
+import { auth, signOut } from "@/auth";
 export async function logout() {
+  const session = await auth();
+  const token = session?.user.token;
+  try {
+    const response = await fetch(`http://localhost:8080/api/auth/logout`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log("Delete successful:", data);
+  } catch (error) {
+    console.error("Error deleting resource:", error);
+  }
+
   await signOut();
 }

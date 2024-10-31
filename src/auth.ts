@@ -35,6 +35,7 @@ export const {
   ],
   session: {
     strategy: "jwt",
+    maxAge: 60,
   },
   callbacks: {
     async session({ session, token }) {
@@ -44,12 +45,17 @@ export const {
       if (token.role && session.user) {
         session.user.role = token.role;
       }
+      if (token.token && session.user) {
+        session.user.token = token.token;
+      }
+
       return session;
     },
     async jwt({ token, user }) {
       if (user) {
         return { ...token, ...user };
       }
+      console.log(token);
       return token;
     },
   },

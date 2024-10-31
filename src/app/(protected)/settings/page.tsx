@@ -1,5 +1,5 @@
 import { logout } from "@/actions/logout";
-import { auth, signOut } from "@/auth";
+import { auth } from "@/auth";
 import { Button } from "@/components/ui/button";
 
 async function SettingsPage() {
@@ -7,7 +7,7 @@ async function SettingsPage() {
 
   return (
     <div>
-      Settings Page {JSON.stringify(session)}
+      Settings Page {JSON.stringify(session?.user.email)}
       <form action={logout}>
         <Button type="submit" variant="secondary">
           Sign out
