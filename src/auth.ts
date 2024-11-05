@@ -2,12 +2,7 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { LoginSchema } from "@/schemas";
 
-export const {
-  auth,
-  signIn,
-  signOut,
-  handlers: { GET, POST },
-} = NextAuth({
+export const { auth, signIn, signOut, handlers } = NextAuth({
   providers: [
     Credentials({
       async authorize(credentials) {
