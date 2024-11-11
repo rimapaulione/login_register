@@ -27,7 +27,10 @@ export async function register(values: z.infer<typeof RegisterSchema>) {
     }
 
     const result = await response.json();
-    return { success: "Registration successful", data: result };
+
+    //TODO: SEND VERIFICATION TOKEN EMAIL
+
+    return { success: "Confirmation email sent!", data: result };
   } catch (error: any) {
     return { error: error.message };
   }

@@ -20,12 +20,24 @@ export async function login(values: z.infer<typeof LoginSchema>) {
       password,
       redirectTo: DEFAULT_LOGIN_REDIRECT,
     });
+
     return { success: "Your login is success" };
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {
         case "CredentialsSignin":
           return { error: "Invalid credencials!" };
+        case "CallbackRouteError":
+          const verification = error.cause?.err?.message;
+
+          if (verification && verification.includes("Not verified")) {
+            // SEND VERIFICATION EMAIL
+            console.log(verification.slice(13));
+            return { error: "Verification email is sent!" };
+          }
+
+          return { error: "Account verification required." };
+
         default:
           return { error: "Something went wrong!" };
       }

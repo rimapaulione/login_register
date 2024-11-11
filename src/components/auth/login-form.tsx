@@ -38,8 +38,8 @@ export function LoginForm() {
     setSuccess("");
     startTransition(async () => {
       const result = await login(values);
-      setError(result.error);
-      setSuccess(result.success);
+      setError(result?.error);
+      setSuccess(result?.success);
     });
   };
 

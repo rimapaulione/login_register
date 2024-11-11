@@ -1,6 +1,7 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { LoginSchema } from "@/schemas";
+import { error } from "console";
 
 export const { auth, signIn, signOut, handlers } = NextAuth({
   providers: [
@@ -9,22 +10,31 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
         const validatedFields = LoginSchema.safeParse(credentials);
         if (!validatedFields.success) return;
 
-        const response = await fetch(`http://localhost:8080/api/auth/login`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(validatedFields.data),
-        });
-        if (!response.ok) {
-          return null;
-        }
-        const user = await response.json();
+        try {
+          const response = await fetch(`http://localhost:8080/api/auth/login`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(validatedFields.data),
+          });
 
-        if (response.ok && user) {
-          console.log(user);
+          if (!response.ok) {
+            if (response.status == 403) {
+              return null;
+            }
+            if (response.status == 400) {
+              const errorData = await response.json();
+              throw new Error(errorData.error);
+            }
+            return null;
+          }
+
+          const user = await response.json();
           return user;
-        } else return null;
+        } catch (error: any) {
+          throw new Error(error.message);
+        }
       },
     }),
   ],
@@ -50,7 +60,6 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
       if (user) {
         return { ...token, ...user };
       }
-      console.log(token);
       return token;
     },
   },
