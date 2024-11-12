@@ -29,13 +29,11 @@ export async function login(values: z.infer<typeof LoginSchema>) {
           return { error: "Invalid credencials!" };
         case "CallbackRouteError":
           const verification = error.cause?.err?.message;
-
           if (verification && verification.includes("Not verified")) {
             // SEND VERIFICATION EMAIL
             console.log(verification.slice(13));
-            return { error: "Verification email is sent!" };
+            return { success: "Confirmation email sent!" };
           }
-
           return { error: "Account verification required." };
 
         default:
