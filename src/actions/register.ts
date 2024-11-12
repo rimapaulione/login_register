@@ -2,6 +2,7 @@
 
 import { RegisterSchema } from "../schemas";
 import { z } from "zod";
+import { sendVerificationEmail } from "@/lib/mail";
 
 export async function register(values: z.infer<typeof RegisterSchema>) {
   const validatedFields = RegisterSchema.safeParse(values);
@@ -26,11 +27,11 @@ export async function register(values: z.infer<typeof RegisterSchema>) {
       throw new Error(errorData.error);
     }
 
-    const result = await response.json();
+    const user = await response.json();
 
-    //TODO: SEND VERIFICATION TOKEN EMAIL
+    await sendVerificationEmail(user.email, user.verification);
 
-    return { success: "Confirmation email sent!", data: result };
+    return { success: "Confirmation email sent!", data: user };
   } catch (error: any) {
     return { error: error.message };
   }

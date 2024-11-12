@@ -5,6 +5,7 @@ import { LoginSchema } from "@/schemas";
 import { AuthError } from "next-auth";
 import { signIn } from "@/auth";
 import { z } from "zod";
+import { sendVerificationEmail } from "@/lib/mail";
 
 export async function login(values: z.infer<typeof LoginSchema>) {
   const validatedFields = LoginSchema.safeParse(values);
@@ -30,8 +31,18 @@ export async function login(values: z.infer<typeof LoginSchema>) {
         case "CallbackRouteError":
           const verification = error.cause?.err?.message;
           if (verification && verification.includes("Not verified")) {
+            const uuidRegex =
+              /\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b/;
+            const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;
+            const uuidMatch = verification.match(uuidRegex);
+            const verificationToken = uuidMatch ? uuidMatch[0] : null;
+            const emailMatch = verification.match(emailRegex);
+            const email = emailMatch ? emailMatch[0] : null;
+
             // SEND VERIFICATION EMAIL
-            console.log(verification.slice(13));
+
+            await sendVerificationEmail(email, verificationToken);
+
             return { success: "Confirmation email sent!" };
           }
           return { error: "Account verification required." };

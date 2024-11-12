@@ -1,8 +1,6 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { LoginSchema } from "@/schemas";
-import { error } from "console";
-import { FaBedPulse } from "react-icons/fa6";
 
 export const { auth, signIn, signOut, handlers } = NextAuth({
   providers: [
