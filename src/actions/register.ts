@@ -30,7 +30,6 @@ export async function register(values: z.infer<typeof RegisterSchema>) {
     const user = await response.json();
 
     await sendVerificationEmail(user.email, user.verification);
-
     return { success: "Confirmation email sent!", data: user };
   } catch (error: any) {
     return { error: error.message };

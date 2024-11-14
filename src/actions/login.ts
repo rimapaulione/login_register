@@ -33,12 +33,12 @@ export async function login(values: z.infer<typeof LoginSchema>) {
           const verification = error.cause?.err?.message;
           if (verification && verification.includes("Not verified")) {
             const { email, verificationToken } = getTokenAndEmail(verification);
-            if (verificationToken && email)
+            if (verificationToken && email) {
               await sendVerificationEmail(email, verificationToken);
-            return { success: "Confirmation email sent!" };
+              return { success: "Confirmation email sent!" };
+            }
+            return { error: "Account verification required." };
           }
-          return { error: "Account verification required." };
-
         default:
           return { error: "Something went wrong!" };
       }
