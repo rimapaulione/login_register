@@ -15,6 +15,7 @@ function NewVerification() {
   const [success, setSuccess] = useState<string | undefined>("");
 
   const onSubmit = useCallback(() => {
+    if (success || error) return;
     if (!token) {
       setError("Missing token!");
       return;
@@ -25,7 +26,7 @@ function NewVerification() {
         setError(data.error);
       })
       .catch(() => setError("Something went wrong"));
-  }, [token]);
+  }, [token, success, error]);
 
   useEffect(() => {
     onSubmit();
@@ -37,9 +38,10 @@ function NewVerification() {
       backButtonHref="/auth/login"
     >
       <div className="flex items-center w-full justify-center">
-        <BeatLoader />
+        {!success && !error && <BeatLoader />}
+
         <FormSuccess message={success} />
-        <FormError message={error} />
+        {!success && <FormError message={error} />}
       </div>
     </CardWrapper>
   );

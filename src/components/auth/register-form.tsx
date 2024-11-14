@@ -39,9 +39,12 @@ export function RegisterForm() {
     setError("");
     setSuccess("");
     startTransition(async () => {
-      const result = await register(values);
-      setError(result.error);
-      setSuccess(result.success);
+      register(values)
+        .then((data) => {
+          setSuccess(data.success);
+          setError(data.error);
+        })
+        .catch(() => setError("Something went wrong"));
     });
   };
 
