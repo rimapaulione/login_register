@@ -18,10 +18,7 @@ export async function logout() {
     }
 
     const data = await response.json();
-    console.log("Delete successful:", data);
-  } catch (error) {
-    console.error("Error deleting resource:", error);
-  }
+  } catch (error) {}
 
-  await signOut();
+  await signOut({ redirectTo: "/login" });
 }
