@@ -35,7 +35,6 @@ export function ResetForm() {
   const submitHandler = (values: z.infer<typeof ResetSchema>) => {
     setError("");
     setSuccess("");
-    console.log(values);
     startTransition(async () => {
       const result = await reset(values);
       setError(result?.error);
