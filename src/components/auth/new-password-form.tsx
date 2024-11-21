@@ -55,10 +55,48 @@ export function NewPasswordForm() {
         <form className="space-y-6" onSubmit={form.handleSubmit(submitHandler)}>
           <FormField
             control={form.control}
+            name="oldPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Old password</FormLabel>
+                <FormControl>
+                  <Input
+                    disabled={isPending}
+                    placeholder="******"
+                    {...field}
+                    type="password"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
             name="password"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>New password</FormLabel>
+                <FormControl>
+                  <Input
+                    disabled={isPending}
+                    placeholder="******"
+                    {...field}
+                    type="password"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="confirmPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Confirm Password</FormLabel>
                 <FormControl>
                   <Input
                     disabled={isPending}

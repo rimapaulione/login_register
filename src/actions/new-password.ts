@@ -12,11 +12,18 @@ export async function newPassword(
   const validatedFields = NewPasswordSchema.safeParse(values);
   if (!validatedFields.success) return { error: "Invalid fields!" };
 
-  const password = validatedFields.data;
+  if (validatedFields.data.password !== validatedFields.data.confirmPassword)
+    return { error: "Please check passwords" };
+
+  const password = validatedFields.data.password;
+  const oldPassword = validatedFields.data.oldPassword;
 
   try {
-    console.log(validatedFields.data);
-    const test = { password: password.password, token: token };
+    const test = {
+      password,
+      token: token,
+      oldPassword,
+    };
 
     const response = await fetch(`http://localhost:8080/api/reset/verify`, {
       method: "POST",
