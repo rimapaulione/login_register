@@ -20,6 +20,7 @@ export async function login(values: z.infer<typeof LoginSchema>) {
     await signIn("credentials", {
       email,
       password,
+      callbackUrl: DEFAULT_LOGIN_REDIRECT, // Provide the target URL
       redirectTo: DEFAULT_LOGIN_REDIRECT,
     });
 

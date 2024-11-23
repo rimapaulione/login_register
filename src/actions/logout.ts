@@ -20,5 +20,5 @@ export async function logout() {
     const data = await response.json();
   } catch (error) {}
 
-  await signOut({ redirectTo: "/login" });
+  await signOut({ redirectTo: "/auth/login" });
 }
