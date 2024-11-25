@@ -47,8 +47,6 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
   },
   callbacks: {
     async signIn({ user, account }) {
-      //allow login only if user is verified
-      console.log(`TESTAS`);
       if (account?.provider === "credentials") {
         const response = await fetch(`http://localhost:8080/api/auth/login`, {
           method: "POST",
@@ -77,7 +75,6 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
       if (token.firstname && session.user) {
         session.user.name = token.firstname;
       }
-      console.log(`AUTH  ${session.user.email}`);
       return session;
     },
     async jwt({ token, user }) {

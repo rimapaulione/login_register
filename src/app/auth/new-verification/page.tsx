@@ -5,7 +5,7 @@ import { CardWrapper } from "@/components/auth/card-wrapper";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 import { useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { BeatLoader } from "react-spinners";
 
 function NewVerification() {
@@ -14,7 +14,12 @@ function NewVerification() {
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
 
+  const initialized = useRef(false);
+
   const onSubmit = useCallback(() => {
+    if (!initialized.current) {
+      initialized.current = true;
+    }
     if (success || error) return;
     if (!token) {
       setError("Missing token!");
