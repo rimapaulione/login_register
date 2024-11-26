@@ -12,8 +12,9 @@ function SettingsPage() {
   };
 
   return (
-    <div className="bg-white p-10 rounded-xl">
-      {/* Settings Page {JSON.stringify(user?.email)} */}
+    <div className="bg-white p-10 rounded-xl flex flex-col space-y-4">
+      <p className="text-2xl text-center font-semibold">Settings Page</p>
+      <p>Hello {JSON.stringify(user?.email)}</p>
       <Button onClick={onClick} type="submit" variant="secondary">
         Sign out
       </Button>
