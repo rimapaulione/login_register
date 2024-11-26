@@ -2,18 +2,18 @@
 
 import { logout } from "@/actions/logout";
 import { Button } from "@/components/ui/button";
-import { useSession } from "next-auth/react";
+import { UseCurrentUser } from "@/hooks/use-current-user";
 
 function SettingsPage() {
-  const session = useSession();
+  const user = UseCurrentUser();
 
   const onClick = () => {
     logout();
   };
 
   return (
-    <div>
-      Settings Page {JSON.stringify(session?.data?.user.email)}
+    <div className="bg-white p-10 rounded-xl">
+      {/* Settings Page {JSON.stringify(user?.email)} */}
       <Button onClick={onClick} type="submit" variant="secondary">
         Sign out
       </Button>
