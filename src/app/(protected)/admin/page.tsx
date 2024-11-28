@@ -1,5 +1,6 @@
 "use client";
 
+import { admin } from "@/actions/admin";
 import { RoleGate } from "@/components/auth/role-gate";
 import { FormSuccess } from "@/components/form-success";
 import { Button } from "@/components/ui/button";
@@ -7,6 +8,13 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { toast } from "sonner";
 
 function Adminpage() {
+  async function onClickServerAction() {
+    const result = await admin();
+
+    if (result.error) toast.error("Forbidden Server Action");
+    if (result.success) toast.success("Allowed Server Action");
+  }
+
   async function onClickApiRoute() {
     const response = await fetch("/api/admin");
     if (!response.ok) {
@@ -32,7 +40,7 @@ function Adminpage() {
         </div>
         <div className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-md">
           <p className="text-sm font-medium">Admin-only Server Action</p>
-          <Button>Click to test</Button>
+          <Button onClick={onClickServerAction}>Click to test</Button>
         </div>
       </CardContent>
     </Card>
