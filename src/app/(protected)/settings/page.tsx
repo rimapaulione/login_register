@@ -1,24 +1,32 @@
 "use client";
 
-import { logout } from "@/actions/logout";
+import { settings } from "@/actions/settings";
 import { Button } from "@/components/ui/button";
-import { useCurrentUser } from "@/hooks/use-current-user";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+
+import { useTransition } from "react";
 
 function SettingsPage() {
-  const user = useCurrentUser();
+  const [isPending, startTransition] = useTransition();
 
   const onClick = () => {
-    logout();
+    startTransition(() => {
+      settings({
+        name: "Rima",
+      });
+    });
   };
-
   return (
-    <div className="bg-white p-10 rounded-xl flex flex-col space-y-4">
-      <p className="text-2xl text-center font-semibold">Settings Page</p>
-      <p>Hello {JSON.stringify(user?.email)}</p>
-      <Button onClick={onClick} type="submit" variant="secondary">
-        Sign out
-      </Button>
-    </div>
+    <Card className="W-[600px]">
+      <CardHeader>
+        <p className="text-2xl font-semibold text-center">Settings</p>
+      </CardHeader>
+      <CardContent>
+        <Button disabled={isPending} onClick={onClick}>
+          Update name
+        </Button>
+      </CardContent>
+    </Card>
   );
 }
 

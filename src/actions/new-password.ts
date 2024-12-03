@@ -19,7 +19,7 @@ export async function newPassword(
   const oldPassword = validatedFields.data.oldPassword;
 
   try {
-    const test = {
+    const newPassword = {
       password,
       token: token,
       oldPassword,
@@ -30,7 +30,7 @@ export async function newPassword(
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(test),
+      body: JSON.stringify(newPassword),
     });
 
     if (!response.ok) {

@@ -52,3 +52,11 @@ export const NewPasswordSchema = z.object({
     .min(1, { message: "Password is required" }),
   oldPassword: z.string().trim().min(1, { message: "Password is required" }),
 });
+
+export const SettingsSchema = z.object({
+  name: z.optional(
+    z.string().trim().min(1, {
+      message: "Name is required",
+    })
+  ),
+});
