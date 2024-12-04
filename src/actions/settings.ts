@@ -27,6 +27,7 @@ export async function settings(values: z.infer<typeof SettingsSchema>) {
       const errorData = await response.json();
       throw new Error(errorData || "Something went wrong");
     }
+    return response;
   } catch (error: any) {
     console.log(error.message);
     return { error: error.message };

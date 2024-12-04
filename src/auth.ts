@@ -77,10 +77,23 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
       }
       return session;
     },
-    async jwt({ token, user }) {
-      if (user) {
-        return { ...token, ...user };
-      }
+    async jwt({ token }) {
+      if (!token.sub) return token;
+      console.log(typeof token.sub);
+
+      try {
+        const response = await fetch("http://localhost:8080/api/users/user", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ id: token.sub }),
+        });
+
+        const user = await response.json();
+        console.log(`USER:  ${user}`);
+      } catch (error) {}
+
       return token;
     },
   },
