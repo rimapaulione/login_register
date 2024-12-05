@@ -70,6 +70,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
         session.user.role = token.role;
       }
       if (token.token && session.user) {
+        console.log(token.token);
         session.user.token = token.token;
       }
       if (token.firstname && session.user) {
@@ -79,7 +80,6 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
     },
     async jwt({ token }) {
       if (!token.sub) return token;
-      console.log(typeof token.sub);
 
       try {
         const response = await fetch("http://localhost:8080/api/users/user", {
@@ -90,9 +90,20 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
           body: JSON.stringify({ id: token.sub }),
         });
 
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData || "Something went wrong");
+        }
         const user = await response.json();
-        console.log(`USER:  ${user}`);
-      } catch (error) {}
+        if (!user) return token;
+        token.name = user.firstname;
+        token.email = user.email;
+        token.role = user.role;
+      } catch (error: any) {
+        console.log(error.message);
+        return { error: error.message };
+      }
+      console.log(token);
 
       return token;
     },
