@@ -33,7 +33,6 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
           }
 
           const user = await response.json();
-          console.log(`authorize ${user.email}`);
           return user;
         } catch (error: any) {
           throw new Error(error.message);
@@ -57,12 +56,13 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
         });
         if (!response.ok) return false;
         const createdUser = await response.json();
+        console.log(createdUser);
 
         if (createdUser.verified) return true;
       }
       return false;
     },
-    async session({ session, token }) {
+    async session({ session, token, user }) {
       if (token.sub && session.user) {
         session.user.id = token.sub;
       }
@@ -70,7 +70,6 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
         session.user.role = token.role;
       }
       if (token.token && session.user) {
-        console.log(token.token);
         session.user.token = token.token;
       }
       if (token.firstname && session.user) {
@@ -78,33 +77,10 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
       }
       return session;
     },
-    async jwt({ token }) {
-      if (!token.sub) return token;
-
-      try {
-        const response = await fetch("http://localhost:8080/api/users/user", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ id: token.sub }),
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData || "Something went wrong");
-        }
-        const user = await response.json();
-        if (!user) return token;
-        token.name = user.firstname;
-        token.email = user.email;
-        token.role = user.role;
-      } catch (error: any) {
-        console.log(error.message);
-        return { error: error.message };
+    async jwt({ token, user }) {
+      if (user) {
+        return { ...token, ...user };
       }
-      console.log(token);
-
       return token;
     },
   },
