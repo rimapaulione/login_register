@@ -102,11 +102,10 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
         }
 
         const existedUser = await response.json();
-        // console.log(existedUser);
 
         token.token = existedUser.token;
         token.firstname = existedUser.firstname;
-        console.log(token);
+
         return token;
       } catch (error: any) {
         console.log(error.message);
