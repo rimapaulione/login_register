@@ -56,13 +56,12 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
         });
         if (!response.ok) return false;
         const createdUser = await response.json();
-        console.log(createdUser);
 
         if (createdUser.verified) return true;
       }
       return false;
     },
-    async session({ session, token, user }) {
+    async session({ session, token }) {
       if (token.sub && session.user) {
         session.user.id = token.sub;
       }
@@ -78,10 +77,39 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
       return session;
     },
     async jwt({ token, user }) {
-      if (user) {
-        return { ...token, ...user };
+      try {
+        if (user) {
+          return { ...token, ...user };
+        }
+
+        if (!token.sub) return token;
+
+        const response = await fetch("http://localhost:8080/api/users/user", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token.token}`,
+          },
+          body: JSON.stringify({ id: token.sub }),
+        });
+
+        if (!response.ok) {
+          console.log("ERROR");
+          const errorData = await response.json();
+          throw new Error(errorData || "Something went wrong");
+        }
+
+        const existedUser = await response.json();
+        // console.log(existedUser);
+
+        token.token = existedUser.token;
+        token.firstname = existedUser.firstname;
+        //console.log(token);
+        return token;
+      } catch (error: any) {
+        console.log(error.message);
+        return { error: error.message };
       }
-      return token;
     },
   },
 });
