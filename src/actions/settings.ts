@@ -2,6 +2,7 @@
 
 import { currentUser } from "@/lib/auth";
 import { SettingsSchema } from "@/schemas";
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 export async function settings(values: z.infer<typeof SettingsSchema>) {
@@ -27,7 +28,7 @@ export async function settings(values: z.infer<typeof SettingsSchema>) {
       const errorData = await response.json();
       throw new Error(errorData || "Something went wrong");
     }
-    return;
+    revalidatePath("/server");
   } catch (error: any) {
     console.log(error.message);
     return { error: error.message };
