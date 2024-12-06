@@ -1,6 +1,7 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { LoginSchema } from "@/schemas";
+import { revalidatePath } from "next/cache";
 
 export const { auth, signIn, signOut, handlers } = NextAuth({
   providers: [
@@ -104,7 +105,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
 
         token.token = existedUser.token;
         token.firstname = existedUser.firstname;
-        //console.log(token);
+        console.log(token);
         return token;
       } catch (error: any) {
         console.log(error.message);
