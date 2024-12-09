@@ -6,8 +6,13 @@ import { useSession } from "next-auth/react";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { SettingsSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { SettingsSchema } from "@/schemas";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { FormError } from "@/components/form-error";
+import { FormSuccess } from "@/components/form-success";
+import { useCurrentUser } from "@/hooks/use-current-user";
 import {
   Form,
   FormControl,
@@ -16,11 +21,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { useCurrentUser } from "@/hooks/use-current-user";
-import { FormError } from "@/components/form-error";
-import { FormSuccess } from "@/components/form-success";
+
 import {
   Select,
   SelectValue,
