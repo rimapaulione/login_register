@@ -13,7 +13,6 @@ export async function settings(values: z.infer<typeof SettingsSchema>) {
   const { name } = validatedFields.data;
   const { email, token } = await currentUser();
 
-  console.log(name, email, token);
   try {
     const response = await fetch("http://localhost:8080/api/users", {
       method: "PATCH",
@@ -29,6 +28,7 @@ export async function settings(values: z.infer<typeof SettingsSchema>) {
       throw new Error(errorData || "Something went wrong");
     }
     revalidatePath("/server");
+    return { success: "Name changed!" };
   } catch (error: any) {
     console.log(error.message);
     return { error: error.message };

@@ -1,7 +1,6 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { LoginSchema } from "@/schemas";
-import { revalidatePath } from "next/cache";
 
 export const { auth, signIn, signOut, handlers } = NextAuth({
   providers: [
@@ -96,7 +95,6 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
         });
 
         if (!response.ok) {
-          console.log("ERROR");
           const errorData = await response.json();
           throw new Error(errorData || "Something went wrong");
         }
