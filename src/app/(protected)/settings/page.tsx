@@ -14,20 +14,25 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useCurrentUser } from "@/hooks/use-current-user";
+import { FormError } from "@/components/form-error";
+import { FormSuccess } from "@/components/form-success";
 
 function SettingsPage() {
   const [isPending, startTransition] = useTransition();
   const { update } = useSession();
-  const [error, setError] = useState<String | undefined>("");
-  const [success, setSuccess] = useState<String | undefined>("");
+  const [error, setError] = useState<string | undefined>("");
+  const [success, setSuccess] = useState<string | undefined>("");
+  const user = useCurrentUser();
 
   const form = useForm<z.infer<typeof SettingsSchema>>({
     resolver: zodResolver(SettingsSchema),
     defaultValues: {
-      name: "",
+      name: user?.name || undefined,
     },
   });
 
@@ -69,11 +74,16 @@ function SettingsPage() {
                         disabled={isPending}
                       />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
-            <Button type="submit">Save</Button>
+            <FormError message={error} />
+            <FormSuccess message={success} />
+            <Button type="submit" disabled={isPending}>
+              Save
+            </Button>
           </form>
         </Form>
       </CardContent>
