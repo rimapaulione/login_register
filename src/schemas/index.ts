@@ -1,3 +1,4 @@
+import { newPassword } from "@/actions/new-password";
 import { z } from "zod";
 
 export const LoginSchema = z.object({
@@ -53,10 +54,49 @@ export const NewPasswordSchema = z.object({
   oldPassword: z.string().trim().min(1, { message: "Password is required" }),
 });
 
-export const SettingsSchema = z.object({
-  name: z.optional(
-    z.string().trim().min(1, {
-      message: "Name is required",
-    })
-  ),
-});
+export const SettingsSchema = z
+  .object({
+    name: z.optional(
+      z.string().trim().min(1, {
+        message: "Name is required",
+      })
+    ),
+    role: z.enum(["USER", "ADMIN"]),
+    email: z.optional(z.string().email()),
+    oldPassword: z.optional(
+      z
+        .string()
+        .trim()
+        .min(1, { message: "Password is required" })
+        .min(6, { message: "Password must have at least 6 characters!" })
+    ),
+    newPassword: z.optional(
+      z
+        .string()
+        .trim()
+        .min(1, { message: "Password is required" })
+        .min(6, { message: "Password must have at least 6 characters!" })
+    ),
+  })
+  .refine(
+    (data) => {
+      if (data.oldPassword && !data.newPassword) return false;
+
+      return true;
+    },
+    {
+      message: "New password is requided!",
+      path: ["newPassword"],
+    }
+  )
+  .refine(
+    (data) => {
+      if (data.newPassword && !data.oldPassword) return false;
+
+      return true;
+    },
+    {
+      message: "Old password is requided!",
+      path: ["newPassword"],
+    }
+  );
