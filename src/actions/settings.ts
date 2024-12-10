@@ -10,22 +10,31 @@ export async function settings(values: z.infer<typeof SettingsSchema>) {
   if (!validatedFields.success) {
     return { error: "Invalid fields" };
   }
-  const { name } = validatedFields.data;
+  const { name, lastName, newPassword, oldPassword } = validatedFields.data;
   const { email, token } = await currentUser();
 
   try {
-    const response = await fetch("http://localhost:8080/api/users", {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ newFirstName: name, email }),
-    });
+    const response = await fetch(
+      "http://localhost:8080/api/users/user/change",
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          newFirstName: name,
+          newLastName: lastName,
+          newPassword,
+          oldPassword,
+          email,
+        }),
+      }
+    );
 
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(errorData || "Something went wrong");
+      throw new Error(errorData.error || "Something went wrong");
     }
     revalidatePath("/server");
     return { success: "Name changed!" };

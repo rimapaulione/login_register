@@ -42,8 +42,8 @@ function SettingsPage() {
     defaultValues: {
       name: user?.name || undefined,
       lastName: user?.lastname || undefined,
-      oldPassword: "",
-      newPassword: "",
+      oldPassword: undefined,
+      newPassword: undefined,
       role: user?.role || undefined,
     },
   });

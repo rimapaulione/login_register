@@ -6,15 +6,18 @@ declare module "next-auth/jwt" {
     role?: "USER" | "ADMIN";
     token?: string;
     firstname?: string;
+    lastname?: string;
   }
 }
 
-export type ExtendedUser = DefaultSession["user"] & { role: "ADMIN" | "USER" };
+export type ExtendedUser = DefaultSession["user"] & {
+  role: "ADMIN" | "USER";
+} & { lastname: string };
 
 declare module "next-auth" {
   interface Session {
     user: ExtendedUserDefaultSession["user"] & { role: "ADMIN" | "USER" } & {
       token: string;
-    } & { name: string };
+    } & { name: string; lastname: string };
   }
 }

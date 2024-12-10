@@ -30,7 +30,6 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
       return false;
     },
     async session({ session, token }) {
-      console.log(token);
       if (token.sub && session.user) {
         session.user.id = token.sub;
       }
@@ -46,7 +45,6 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
       if (token.lastname && session.user) {
         session.user.lastname = token.lastname;
       }
-      console.log(session);
 
       return session;
     },
@@ -74,11 +72,10 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
           const errorData = await response.json();
           throw new Error(errorData || "Something went wrong");
         }
-
         const existedUser = await response.json();
-
         token.token = existedUser.token;
         token.firstname = existedUser.firstname;
+        token.lastname = existedUser.lastname;
 
         return token;
       } catch (error: any) {

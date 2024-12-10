@@ -67,20 +67,8 @@ export const SettingsSchema = z
         message: "Last Name is required",
       })
     ),
-    oldPassword: z.optional(
-      z
-        .string()
-        .trim()
-        .min(1, { message: "Password is required" })
-        .min(6, { message: "Password must have at least 6 characters!" })
-    ),
-    newPassword: z.optional(
-      z
-        .string()
-        .trim()
-        .min(1, { message: "Password is required" })
-        .min(6, { message: "Password must have at least 6 characters!" })
-    ),
+    oldPassword: z.optional(z.string().min(6)),
+    newPassword: z.optional(z.string().min(6)),
   })
   .refine(
     (data) => {
