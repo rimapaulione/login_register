@@ -1,6 +1,7 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { LoginSchema } from "@/schemas";
+import { getAuthentication, getVerifiedOnLogin } from "./data/auth";
 
 export const { auth, signIn, signOut, handlers } = NextAuth({
   providers: [
@@ -8,35 +9,8 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
       async authorize(credentials) {
         const validatedFields = LoginSchema.safeParse(credentials);
         if (!validatedFields.success) return;
-
-        try {
-          const response = await fetch(
-            `http://localhost:8080/api/auth/authentication`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(validatedFields.data),
-            }
-          );
-
-          if (!response.ok) {
-            if (response.status == 403) {
-              return null;
-            }
-            if (response.status == 400) {
-              const errorData = await response.json();
-              throw new Error(errorData.error);
-            }
-            return null;
-          }
-
-          const user = await response.json();
-          return user;
-        } catch (error: any) {
-          throw new Error(error.message);
-        }
+        const result = await getAuthentication(validatedFields.data);
+        return result;
       },
     }),
   ],
@@ -47,17 +21,11 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
   callbacks: {
     async signIn({ user, account }) {
       if (account?.provider === "credentials") {
-        const response = await fetch(`http://localhost:8080/api/auth/login`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(user.email),
-        });
-        if (!response.ok) return false;
-        const createdUser = await response.json();
-
-        if (createdUser.verified) return true;
+        if (user.email) {
+          const verified = await getVerifiedOnLogin(user.email);
+          return verified;
+        }
+        return false;
       }
       return false;
     },
@@ -85,14 +53,17 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
 
         if (!token.sub) return token;
 
-        const response = await fetch("http://localhost:8080/api/users/user", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token.token}`,
-          },
-          body: JSON.stringify({ id: token.sub }),
-        });
+        const response = await fetch(
+          "http://localhost:8080/api/users/user/id",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token.token}`,
+            },
+            body: JSON.stringify({ id: token.sub }),
+          }
+        );
 
         if (!response.ok) {
           const errorData = await response.json();
