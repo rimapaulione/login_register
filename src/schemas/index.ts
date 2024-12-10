@@ -62,7 +62,11 @@ export const SettingsSchema = z
       })
     ),
     role: z.enum(["USER", "ADMIN"]),
-    email: z.optional(z.string().email()),
+    lastName: z.optional(
+      z.string().trim().min(1, {
+        message: "Last Name is required",
+      })
+    ),
     oldPassword: z.optional(
       z
         .string()

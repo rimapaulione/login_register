@@ -41,7 +41,7 @@ function SettingsPage() {
     resolver: zodResolver(SettingsSchema),
     defaultValues: {
       name: user?.name || undefined,
-      email: user?.email || undefined,
+      lastName: user?.lastname || undefined,
       oldPassword: "",
       newPassword: "",
       role: user?.role || undefined,
@@ -93,15 +93,15 @@ function SettingsPage() {
               />
               <FormField
                 control={form.control}
-                name="email"
+                name="lastName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>Last Name</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
-                        type="email"
-                        placeholder="Your email"
+                        type="text"
+                        placeholder="Last Name"
                         disabled={isPending}
                       />
                     </FormControl>

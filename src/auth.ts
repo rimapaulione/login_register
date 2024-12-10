@@ -30,6 +30,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
       return false;
     },
     async session({ session, token }) {
+      console.log(token);
       if (token.sub && session.user) {
         session.user.id = token.sub;
       }
@@ -42,6 +43,10 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
       if (token.firstname && session.user) {
         session.user.name = token.firstname;
       }
+      if (token.lastname && session.user) {
+        session.user.lastname = token.lastname;
+      }
+      console.log(session);
 
       return session;
     },
