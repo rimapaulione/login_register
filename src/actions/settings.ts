@@ -10,7 +10,8 @@ export async function settings(values: z.infer<typeof SettingsSchema>) {
   if (!validatedFields.success) {
     return { error: "Invalid fields" };
   }
-  const { name, lastName, newPassword, oldPassword } = validatedFields.data;
+  const { name, lastName, newPassword, oldPassword, role } =
+    validatedFields.data;
   const { email, token } = await currentUser();
 
   try {
@@ -27,6 +28,7 @@ export async function settings(values: z.infer<typeof SettingsSchema>) {
           newLastName: lastName,
           newPassword,
           oldPassword,
+          role,
           email,
         }),
       }

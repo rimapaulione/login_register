@@ -76,6 +76,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
         token.token = existedUser.token;
         token.firstname = existedUser.firstname;
         token.lastname = existedUser.lastname;
+        token.role = existedUser.role;
 
         return token;
       } catch (error: any) {
