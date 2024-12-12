@@ -3,7 +3,7 @@
 import { settings } from "@/actions/settings";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useSession } from "next-auth/react";
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -29,6 +29,7 @@ import {
   SelectItem,
   SelectContent,
 } from "@/components/ui/select";
+import { logout } from "@/actions/logout";
 
 function SettingsPage() {
   const [isPending, startTransition] = useTransition();
@@ -49,9 +50,12 @@ function SettingsPage() {
   });
 
   const onSubmit = (values: z.infer<typeof SettingsSchema>) => {
+    setError("");
+    setSuccess("");
     startTransition(() => {
       settings(values)
         .then((data) => {
+          console.log(data);
           if (data.error) {
             setError(data.error);
           }
@@ -64,6 +68,11 @@ function SettingsPage() {
         .catch(() => setError("Something went wrong!"));
     });
   };
+
+  if (user.signOut === true) {
+    logout();
+    return;
+  }
   return (
     <Card className="w-[600px]">
       <CardHeader>
@@ -171,8 +180,11 @@ function SettingsPage() {
                 )}
               />
             </div>
-            <FormError message={error} />
-            <FormSuccess message={success} />
+            {error ? (
+              <FormError message={error} />
+            ) : (
+              <FormSuccess message={success} />
+            )}
             <Button type="submit" disabled={isPending}>
               Save
             </Button>

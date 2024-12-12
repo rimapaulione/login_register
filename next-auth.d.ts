@@ -7,6 +7,7 @@ declare module "next-auth/jwt" {
     token?: string;
     firstname?: string;
     lastname?: string;
+    signOut?: boolean;
   }
 }
 
@@ -18,6 +19,6 @@ declare module "next-auth" {
   interface Session {
     user: ExtendedUserDefaultSession["user"] & { role: "ADMIN" | "USER" } & {
       token: string;
-    } & { name: string; lastname: string };
+    } & { name: string; lastname: string; signOut: boolean };
   }
 }

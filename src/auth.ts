@@ -2,6 +2,7 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { LoginSchema } from "@/schemas";
 import { getAuthentication, getVerifiedOnLogin } from "./data/auth";
+import { signOut as test } from "next-auth/react";
 
 export const { auth, signIn, signOut, handlers } = NextAuth({
   providers: [
@@ -45,6 +46,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
       if (token.lastname && session.user) {
         session.user.lastname = token.lastname;
       }
+      session.user.signOut = token.signOut || false;
 
       return session;
     },
@@ -69,9 +71,15 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
         );
 
         if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData || "Something went wrong");
+          if (response.status == 401) {
+            token.signOut = true;
+            return token;
+          } else {
+            const errorData = await response.json();
+            throw new Error(errorData || "Something went wrong");
+          }
         }
+
         const existedUser = await response.json();
         token.token = existedUser.token;
         token.firstname = existedUser.firstname;
