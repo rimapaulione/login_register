@@ -2,7 +2,6 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { LoginSchema } from "@/schemas";
 import { getAuthentication, getVerifiedOnLogin } from "./data/auth";
-import { signOut as test } from "next-auth/react";
 
 export const { auth, signIn, signOut, handlers } = NextAuth({
   providers: [

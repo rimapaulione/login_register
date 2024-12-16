@@ -2,7 +2,7 @@
 
 import { settings } from "@/actions/settings";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import { useEffect, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -29,7 +29,6 @@ import {
   SelectItem,
   SelectContent,
 } from "@/components/ui/select";
-import { logout } from "@/actions/logout";
 
 function SettingsPage() {
   const [isPending, startTransition] = useTransition();
@@ -37,6 +36,12 @@ function SettingsPage() {
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const user = useCurrentUser();
+
+  useEffect(() => {
+    if (user.signOut) {
+      signOut({ redirectTo: "/auth/login" });
+    }
+  }, [user.signOut]);
 
   const form = useForm<z.infer<typeof SettingsSchema>>({
     resolver: zodResolver(SettingsSchema),
@@ -55,8 +60,10 @@ function SettingsPage() {
     startTransition(() => {
       settings(values)
         .then((data) => {
-          console.log(data);
           if (data.error) {
+            if (data.error === "Unauthorized") {
+              signOut({ redirectTo: "/auth/login" });
+            }
             setError(data.error);
           }
 
@@ -69,10 +76,6 @@ function SettingsPage() {
     });
   };
 
-  if (user.signOut === true) {
-    logout();
-    return;
-  }
   return (
     <Card className="w-[600px]">
       <CardHeader>
