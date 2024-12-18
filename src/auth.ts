@@ -57,6 +57,14 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
 
         if (!token.sub) return token;
 
+        if (token.exp) {
+          const now = Math.floor(Date.now() / 1000);
+
+          if (token.exp < now) {
+            token.signOut = true;
+          }
+        }
+
         const response = await fetch(
           "http://localhost:8080/api/users/user/id",
           {
@@ -84,6 +92,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
         token.firstname = existedUser.firstname;
         token.lastname = existedUser.lastname;
         token.role = existedUser.role;
+        console.log(token);
 
         return token;
       } catch (error: any) {

@@ -41,7 +41,7 @@ function SettingsPage() {
     if (user.signOut) {
       signOut({ redirectTo: "/auth/login" });
     }
-  }, [user.signOut]);
+  }, [user.signOut, user]);
 
   const form = useForm<z.infer<typeof SettingsSchema>>({
     resolver: zodResolver(SettingsSchema),
