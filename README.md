@@ -1,36 +1,31 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Login - register form
 
-## Getting Started
+<p>This application is an educational project developed using Next.js and the beta version of NextAuth.js 5. The primary goal of this project is to explore the integration of NextAuth with a real database and a Spring Boot REST API. It focuses on implementing a custom authentication flow, including registration and login forms, using credentials.
 
-First, run the development server:
+The project demonstrates how to:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Create a user-friendly registration and login system.
+- Integrate NextAuth.js to securely handle authentication with a Spring Boot API.
+- Fetch and verify tokens from the API to authenticate users.
+- Ensure email verification as a prerequisite for signing in.
+
+  </p>
+
+## Used in App:
+
+- Nextjs;
+- TypeScript;
+- Resend;
+- Tailwind;
+- Zod;
+
+### `npm run dev`
+
+Runs the app in the development mode.\
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Need to run API from https://github.com/rimapaulione/authJWT.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+The page will reload when you make changes.\
+You may also see any lint errors in the console.
